@@ -1,0 +1,194 @@
+MEMORIA DEL PROYECTO JUPITER
+
+
+INTRODUCCIÓN
+LA empresa SebAlJa S.L has sido contratado por Pontia Logista, una empresa de distribución de frutas, para digitalizar sus procesos.
+
+Las empresa de Pontia Logista es una distribuidora de alimentos, que, recibe producto de proveedores lo registra en su sistema y posteriormente lo vende, registrando la venta. El registro contempla la fecha de recepción, el proveedor, la fruta, el precio de compra y el lote. La fruta queda almacenada, por lo menos un día (luego se verá que es distinto de 24 horas) y posteriormente se distribuye, de forma limitada a un cliente. Este movimiento se registra mediante fecha de venta, peso de venta, fruta vendida, lote vendido y precio de venta.
+
+La fruta al llegar a Pontia Logista, se clasifica en uno de los 15 tipos distintos de fruta que trabaja el cliente:
+
+[añadir tipos]
+
+El cliente desea digitalizar su proceso, identificando en el varios puntos de mejora. 
+
+La base de datos no es relacional, por lo que una métrica del negocio (procesos, ventas y compras) es compleja o al menos, no instantánea.
+La clasificación y asignación de lote no es automática, lo que incide en un sobrecoste operacional no exento de errores. 
+Además el cliente desconoce las capacidades de la IA generativa para dar soporte a sus procesos.
+
+La digitalización del cliente Pontia Logística se va a centrar en procesar sus datos hasta dejarlos en un formato SQL, actualmente los tiene en formato json. Este formato generará una base de datos relacional que buscará optimizar recursos de memoria y de coste de computación. Gracias a la arquitectura SQL se podrá medir automáticamente unos KPIs, que ha sugerido Pontia Logista para determinar de forma inmediata el estado del negocio.
+
+La transformación de los datos de clientes, a un modelo SQL y un modelo tipo dataframe, permitirá entre otras cosas realizar un análisis exploratorio de los datos y una detección de errores. El análisis exploratorio de los datos permitirá detectar eventos o patrones del proceso (o la recogida de datos) y la detección de errores permitirá evaluar los procesos operativos (o los datos de dichos procesos operativos). 
+
+La Inteligencia Artificial tiene dos importantes puntos de mejora operacional para Pontia Logista. En primer lugar, la automatización del etiquetado, es decir, la identificación del producto y la generación de la etiqueta. Se pretende utilizar modelos de Machine Learning y de Deep Learning para identificar cada producto que entre en la empresa mediante una imagen (foto del producto) y una clasificación por un modelo o red neuronal entrenado. El resultado comunicará con una etiquetada que automátizará el proceso.
+
+Las incidencias en Pontia Logista son habituales, y el departamento de calidad o marketing invierte mucho tiempo en redactar correos repetitivos. Pontia Logista ha puesto a disposición del equipo de digitalización una serie de correos ante ciertos eventos y sus respuestas. Se pretende enriquecer de contexto una IA generativa para poder generar plantillas de correos que, tras una revisión por parte del personal de Pontia Logista, permita reducir el tiempo de trabajo [y la influencia de las condiciones estresantes que derivan de una incidencia comercial o de proceso}-- mejorar
+
+Para implementar estas mejoras el equipo de digitalización ha generado una propuesta tecnológica dentro de un plazo de trabajo que ha permitido:
+1. Generar una base de datos relacional en SQL con métricas de KPIs automatizadas en scripts
+2. Procesar y transformar los datos para detectar patrones y errores de los mismos
+3. Crear un dashboard con KPIs que permite al cliente observar los datos y sus tendencias en la empresa
+4. Crear un modelo de clasificación de frutas basado en IA
+5. Generar un Producto Mínimamente Viable de solución generativa de IA que permite acelerar procesos derivados de incidencias.
+
+CONTRIBUCIÓN
+
+La distribución de tareas dentro del equipo ha sido siempre sometida a consenso. Javier Fraguas, por experiencia previa en proyectos y trabajos relacionados con ciencia de datos, ha hecho una gestión más activa como Project Manager. Aunque en ningún caso esto merece un reconocimiento especial porque es un hecho circunstancial. Todo el equipo ha aportado y actuado en función de sus posibilidades y capacidades y siempre ha habido una actitud proactiva, voluntariosa y compañerismo entre los miembros del equipo.
+
+Durante la ejecución del proceso una compañera dejo de trabajar en él. La baja de Karen supuso una reorganización de tareas y responsabilidades y en ningún caso enturbio el compromiso ni actitud del resto de integrantes.
+
+En la tabla siguiente se describe quién o quiénes son los principales responsables de la ejecución de cada parte del trabajo. Como he comentado antes, las decisiones se tomaban en consenso, por lo que todos los miembros del equipo colaboraron en el diseño del resultado y sólo aquellos que figuran en la tabla fueron los responsables de la ejecución del proceso.
+
+PARTE														RESPONSABLE(S)
+Procesado de json a csvs para pasos posteriores 						Sebas, Javier Fraguas
+Creación del modelo relacional									Sebas, Alejandro y Javier Fraguas
+Ingesta de datos en MySQL										Sebas, Alejando
+Calculo de KPIs												Sebas, Alejando (parte de Karen y suya) y Javier Fraguas
+Montaje del script de MySQL										Alejando
+EDA															Sebas
+Detección de errores											Javier Fraguas
+Pre-procesamiento de ML											Sebas
+Entrenamiento modelos ML											Sebas, Alejandro y Javier Fraguas
+Pre-procesamiento DL											Javier Fraguas
+Entrenamiento modelos DL											[a completar]
+
+
+Para la redacción de la memoria se han utilizado los comentarios de cada uno de los miembros del equipo que han realizado en sus notebooks.	
+											
+
+
+MODELO RELACIONAL
+
+Para la creación del modelo relacional se han tenido en cuenta, los KPIs solicitados por el cliente, los datos que tenemos y su organización y se ha buscado un equilibrio entre el peso de las variables de las tablas (el tamaño en memoria) y las relaciones entre las variables de las tablas.
+
+Existen dos penalizaciones a la hora de hacer bases de datos, la primera es de memoria física, cuanto más peso tengan las variables de una tabla más memoria cuesta. Ademas, cuantas más interconsultas se hagan entre tablas (por un sobre-uso de índices), peor procesamiento tiene el software. Ambos eventos tienen un coste computacional que afecta directamente a los recursos económicos de la empresa.
+
+El objetivo del modelo relacional era que fuera barato en términos de memoria física utilizable y bajas interacciones entre diferentes tablas.
+
+Para ello se trabajo del siguiente modo. Se tomaron las KPIs que el cliente solicitaba, y se tomaron las variables que teníamos de los datos que Pontia Logista nos había proporcionado en formato .json. La tabla generaba una puntuación de variables en funcion de si eran necesarias o no para determina el KPI. Al terminar de rellenar la tabla se obtuvo un mapa de variables que se utilizaban más o menos para cada KPI. Esto generó una serie de relaciones o asociaciones entre variables que parecía que era sensato colocar en la misma tabla.
+
+Además se realizó un estudio de las variables para generar la unidad de menor memoria capaz de procesar o contener el valor de todos los datos de las variables. Para ello se midieron máximos y minemos de variables numéricas y máximos y mínimos de la longitud de caracteres de variables tipo string.
+
+Por último se determino qué variables deberían ser foreing key (FK) así como las primary keys (PK) y secondary keys (SK) y los índices.
+
+[Incluir excel de posicionamiento de variables]
+
+[Incluir determinación de tamaño para variables]
+
+[Incluir modelo relacional o hipervínculo al modelo]
+
+Tras la determinación de la estructura de las tablas dentro del modelo relacional se ejecutaron una serie de scripts en pyhotn a fin de obtener csvs que contuvieran los datos que necesitaban las tablas. Los cuadernos para obtener los CSVs se encuentran [incluir ypmb]. 
+
+Para hacer la ingesta se procesaron con AlchemySQL [script]. Las pruebas iniciales se hicieron con subsamples [link a csv de subsamples] y la ingesta final con los CSVs completos. 
+
+{Durante el procesado de los KPIs se detectó que los datos no eran consistentes. Esto se detectó cuando Sebas, tras acabar los KPIs, realizando el EDA detectó valores inconsistentes}. Dicho esto, tuvo que volver a procesarse los datos de las tablas desde Python y se introdujeron en SQL con las variables y unidades correctas.
+
+El script de mySQL es [añadir script completo] y los resultados pueden verse [añadir carpeta de resultados].
+
+
+
+EDA E IDENTIFICACIÓN DE ERRORES
+
+
+EDA
+
+
+
+IDENTIFICACIÓN DE ERRORES
+Pontia Logista establece como errores en sus procesos operativos 4 puntos críticos:
+
+1. Como mínimo se tarda un día desde que la fruta se recoge hasta que llega al cliente final.
+2. A cada proveedor no se le pueden vender en un mismo día más de 100kg de una misma fruta.
+3. No hay marcas que produzcan más de un tipo de fruta.
+4. Un mismo lote no puede tener marcas o frutas distintas.
+
+LA ejecución de este ejercicio se encuentra en []
+
+Punto 1: Tiempo de estancia mínima en Pontia
+
+Para poder realizar esta detección de error se compara la fecha de compra de un lote frente a la fecha de compra del mismo lote. Lo lotes que no se hayan vendido no dispondran de este último valor y no computarán a la detección de errores.
+
+El planteamiento inicial que se hizo fue la diferencia del tiempo_venta menos el tiempo_recogida. Los tiempos se daban en horas desde el 1 de septiembre del 2024 a las 7:00 de la mañana. Por lo que, una fruta que pase un día en Pontia deberá tener una diferencia mínima de 24 entre tiempo_venta y tiempo_recogida. El resultado se analizó enfocándose en clientes, proveedores, lotes y tipos de fruta. Inicialmente se buscaban cuáles cumplían y cuales no cumplían la regla de negocio y posteriormente se investigo si había algún elemento de cad variable estudiada (esto es, un cliente en concreto, una fruta determinada o un proveedor X ...) que siempre (o nunca) cumpliera la norma. 
+
+Para esto se generó una variable en el bucle en el dataframe llamada diferencia_tiempo_venta, se obtuvo de restar tiempo_recogida y tiempo_venta. A partir de esta variable se filtró el dataframe frente a la variable diferencia_tiempo_venta teniendo en cuenta las variables relevantes para este estudio (lote, proveedor, cliente, tipo de fruta). Esto se hizo contabilizando el total de las variables que pasaban o no pasaban la criba. Dicho total se contabilizaba mediante la creacion de listas como se ven en el cuaderno [añadir ruta cuaderno]. Además con esas listas se generaron sets, los sets permitieron mediante las operaciones de diferencia comprobar si hanía alguna variable de interés que siempre o nunca cumpliera la condición de más de 24 horas de permanencia en Pontia.
+
+Los resultados iniciales fueron que muy pocos lotes, proveedores, tipos de fruta o clientes pasaban este criterio, pero ninguno de ellos lo hacía completamente en uno de los grupos (pasa o no pasa el criterio de 24 horas). Por lo que se decidió probar el mismo criterio pero en formato fecha, teniendo en cuenta el valor día. 
+
+
+Este nuevo enfoque tiene una importante implicación, puede llegar frutas un día y si al día siguiente salen cumple la regla de negocio, aunque no hayan pasado 24 horas.
+
+Si analizamos las longitudes de los dataframes que pasan o no pasan cualquiera de los criterios vemos que:
+
+Las variables que pasan el filtro de horas son:  405 las que no son:  69921
+Las variables que pasan el filtro de días son:  19094 las que no son:  51232
+
+A partir de estos dataframes se han generado sets de las variables de marca, tipo, cliente, lote para ver si alguna de ellas cumplía la condición de pasa íntegramente, por ejemplo, para las manzanas siempre se cumple la regla, o para el cliente X siempre se cumple la regla. Como se puede ver en el notebook [] al generar las diferencias entre los sets que cumplen la regla y los que no lo cumplen no se arroja ninguna variable. Por lo que siempre hay alguna variable que en algún momento incumple la regla. Además se decidió analizar si había alguna diferencia relevante entre las variables (salvo la de lote, que son mayoritariamente elementos únicos y no son graficables) aplicando una u otra regla (por ejemplo, un cliente aumenta un 30% más que el resto de clientes al aplicar la regla de un día frente a la de 24 h).
+
+Punto 2: Peso máximo de venta
+Para poder analizar esta regla de negocio, se ha tomado a cada cliente en cada día de venta para un determinado tipo de fruta. Para cada uno de estos valores se ha calculado la suma total del peso, y en ninguno de los casos se ha incumplido la regla. 
+
+Punto 3. No hay marcas que produzcan m[as d aun tipo de fruta
+
+Para poder determinar si se cumple esta regla de negocio se han planteado dos comandos, el más sencillo , agrupa el dataframe por marca y calcula los valores únicos que hay en tipo dentro de esa agrupación. Las 34 marcas venden los 15 tipos de frutas. Por lo que esta regla de negocio se incumple totalmente.
+
+Punto 4. Un mismo lote no puede tener marcas o tipos de frutas distintas 
+
+Para esta parte del proceso se revisaron los valores únicos de tipos de fruta y marca que contienen cada uno de los lotes. Se clicó un filtro que si había más de un tipo o marca para un mismo lote se generaba una lista de valores únicos (sets) de lotes erróneos para marca y tipo.
+
+Los resultados fueron que: 
+"La longitud de los sets de lotes_varias_marcas, lotes_varios_tipos y su diferencia son, respectivamente:
+696 512 184"
+Mediante los sets se comprobaron si había alguna relacion especial entre los lotes que incumplen en tipo y marca, sólo se pareció que para varios lotes que sea exclusivos de tipo de fruta y marca. De hecho, casi todos los lotes que incumplen en tipos incumplen en marca.
+
+
+VALORES NULOS
+
+Tras aplicar el comando isla al dataframe este no devolvió ningún nulo. Por lo que se han tomado todos los datos del dataframe, o la construcción del mismo no contiene datos nulos.
+
+
+
+AUTOMATIZACIÓN DEL PROCESO
+
+
+
+CONCLUSIONES FINALES Y TRABAJO FUTURO
+
+
+
+La empresa Ponta Logista carece de un sistema de datos capaz de almacenar y procesar toda la
+información relativa a sus procesos en el negocio de distribución de alimentos. Actualmente utilizan
+un sistema NoSQL que almacena toda la información en distintos archivos con formato JSON. Sin
+embargo, hoy por hoy, no llevan a cabo ningún tipo de procesamiento ni análisis sobre ellas, lo que
+les priva de la posibilidad de tomar decisiones estratégicas basadas en los datos, detectar errores o
+incidencias que se produzcan en sus sistemas y extraer información y conocimiento que les permita
+monitorizar y analizar las operaciones.
+Ante esta situación, Ponta Logista ha diseñado un plan de transformación de cómo la empresa
+debería gestionar sus datos. Aunque la intención es mejorar toda su infraestructura de datos, desean
+comenzar con las relacionadas con la distribución de frutas para, posteriormente, evaluar su
+eficiencia y si realmente representa una mejora notable para el negocio. En caso de obtener
+resultados positivos, procederían con la transformación del resto de su infraestructura. El plan
+relacionado con la distribución de frutas cuenta con los siguientes pasos:
+1. Diseñar e implementar un modelo de datos relacional que le permita llevar a cabo análisis
+fácilmente y extraer métricas y KPIs útiles para el negocio.
+2. Identificar patrones de errores e incidencias dentro de sus sistemas gracias a los datos
+proporcionados.
+3. Automatizar la tarea de etiquetado de frutas.
+4. Proponer soluciones de IA Generativa para optimizar sus procesos.
+Con la primera tarea lo que se pretende es facilitar la tarea a sus analistas, contestar ciertas preguntas
+de negocio y monitorizar sus sistemas adecuadamente gracias a la extracción de métricas. Esto les
+3
+Caso de Uso: Visión artificial
+permite tomar decisiones basadas en sus datos, así como descubrir áreas de mejora dentro del
+negocio.
+A pesar de que sus sistemas funcionan razonablemente bien y no presenta incidencias críticas, es
+posible que tanto en el procesamiento como en el almacenamiento de los datos de las operaciones
+se cometan errores o se produzcan bugs que es conveniente solucionar. Por eso, parte de este plan
+de transformación pone su foco en identificar y comunicar las incidencias.
+Por último, Pontia Logista quiere competir tecnológicamente con otras empresas de su sector
+desarrollando sistemas que le permitan automatizar tareas complejas. Por este motivo, desea
+comenzar con el diseño e implementación de tecnologías capaces de identificar con técnicas de
+visión artificial los distintos alimentos.
+Para lograr estos cuatro objetivos, la empresa ha facilitado especificaciones de cada una de las
+tareas, así como los datos necesarios para desempeñarlas. Aunque, por seguridad, Pontia Logista
+prefiera no dar acceso completo a sus datos, ha llevado a cabo una extracción de datos para poder
+trabajar adecuadamente.

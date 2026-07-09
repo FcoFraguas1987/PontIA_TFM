@@ -1,0 +1,76 @@
+cliente,tipo,cuantia_total
+"Cosecha Fresca",Guava,2140.64
+"Cosecha Fresca",Apple,1220.60
+"Cosecha Fresca",Kiwi,844.73
+"Cosecha Fresca",Mango,467.19
+"Cosecha Fresca",Pear,289.50
+"Cosecha Fresca",Orange,270.97
+"Cosecha Fresca",Plum,260.24
+"Cosecha Fresca",Banana,258.87
+"Cosecha Fresca",Carambola,244.55
+"Cosecha Fresca",Persimmon,242.86
+"Cosecha Fresca",Peach,240.85
+"Cosecha Fresca",Pitaya,239.63
+"Cosecha Fresca",Pomegranate,225.73
+"Cosecha Fresca",muskmelon,217.11
+"Cosecha Fresca",Tomatoes,201.54
+MegaCompra,Guava,2016.19
+MegaCompra,Apple,1385.40
+MegaCompra,Kiwi,805.57
+MegaCompra,Mango,440.18
+MegaCompra,Banana,328.78
+MegaCompra,Peach,292.63
+MegaCompra,Orange,286.16
+MegaCompra,Pear,269.76
+MegaCompra,Plum,268.94
+MegaCompra,Pitaya,259.77
+MegaCompra,Carambola,245.23
+MegaCompra,Pomegranate,226.08
+MegaCompra,Tomatoes,195.30
+MegaCompra,muskmelon,180.72
+MegaCompra,Persimmon,161.33
+"Mercado del Barrio",Guava,1970.47
+"Mercado del Barrio",Apple,1179.03
+"Mercado del Barrio",Kiwi,951.71
+"Mercado del Barrio",Mango,440.58
+"Mercado del Barrio",Banana,339.28
+"Mercado del Barrio",Pear,321.17
+"Mercado del Barrio",Orange,296.65
+"Mercado del Barrio",Pitaya,274.77
+"Mercado del Barrio",Pomegranate,247.94
+"Mercado del Barrio",Peach,239.69
+"Mercado del Barrio",Plum,231.24
+"Mercado del Barrio",muskmelon,228.80
+"Mercado del Barrio",Persimmon,225.20
+"Mercado del Barrio",Tomatoes,197.59
+"Mercado del Barrio",Carambola,178.97
+SuperEconómico,Guava,2052.84
+SuperEconómico,Apple,1210.77
+SuperEconómico,Kiwi,883.44
+SuperEconómico,Mango,436.75
+SuperEconómico,Orange,334.06
+SuperEconómico,Banana,324.29
+SuperEconómico,Pear,289.32
+SuperEconómico,Persimmon,271.14
+SuperEconómico,Pitaya,265.70
+SuperEconómico,Peach,242.49
+SuperEconómico,Pomegranate,241.62
+SuperEconómico,Carambola,231.19
+SuperEconómico,Plum,221.44
+SuperEconómico,muskmelon,220.56
+SuperEconómico,Tomatoes,216.64
+"SuperMercado Ideal",Guava,2004.71
+"SuperMercado Ideal",Apple,1187.98
+"SuperMercado Ideal",Kiwi,945.42
+"SuperMercado Ideal",Mango,380.74
+"SuperMercado Ideal",Peach,344.49
+"SuperMercado Ideal",Banana,331.19
+"SuperMercado Ideal",Orange,318.63
+"SuperMercado Ideal",Plum,275.66
+"SuperMercado Ideal",Pear,270.14
+"SuperMercado Ideal",Tomatoes,253.93
+"SuperMercado Ideal",Carambola,240.97
+"SuperMercado Ideal",Pitaya,237.56
+"SuperMercado Ideal",Pomegranate,219.23
+"SuperMercado Ideal",Persimmon,203.88
+"SuperMercado Ideal",muskmelon,195.75
