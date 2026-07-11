@@ -92,6 +92,12 @@ EDA E IDENTIFICACIÓN DE ERRORES
 
 EDA
 
+Para el análisis exploratorio de datos se ha utilizado el csv df_final_v1.csv que recoge de forma uniforme todos los datos de los json que se dan de como datos crudos en el estudio.
+
+Se estudian diferentes distribuciones y características de los datos.
+
+Para estudiar la distribución de precios de compra se ha realizado un digarama de cajas de los precios de los mismos con la librería seaborn en función de las marcas [Figura caja de bigotes]. Los datos siguen una distribución normal y no hay nada que llame la atención como valores outlier. Posteriormente se busca obtener informacion de los valores de medianas de los precios varían en función del tipo de fruta si previamente se agrupan por marcas o proveedores. Tampoco aparecen valores extraños y discordantes en estas agrupaciones. Se observa que los tomates aparecen entre las 5 frutas más caras y la carambola en las frutas más baratas. En cambio el muskmelon aparece en ambas listas. Esto da pie a considerar que dentro de un mismo periodo de tiempo el precio inicial de la fruta tiene una considerable variabilidad(en términos de comparación) de una fruta frente a otra.
+
 
 
 IDENTIFICACIÓN DE ERRORES
@@ -106,9 +112,9 @@ LA ejecución de este ejercicio se encuentra en []
 
 Punto 1: Tiempo de estancia mínima en Pontia
 
-Para poder realizar esta detección de error se compara la fecha de compra de un lote frente a la fecha de compra del mismo lote. Lo lotes que no se hayan vendido no dispondran de este último valor y no computarán a la detección de errores.
+Para poder realizar esta detección de error se compara la fecha de compra de un lote frente a la fecha de venta del mismo lote. Los lotes que no se hayan vendido no dispondrán de este último valor y no computarán a la detección de errores.
 
-El planteamiento inicial que se hizo fue la diferencia del tiempo_venta menos el tiempo_recogida. Los tiempos se daban en horas desde el 1 de septiembre del 2024 a las 7:00 de la mañana. Por lo que, una fruta que pase un día en Pontia deberá tener una diferencia mínima de 24 entre tiempo_venta y tiempo_recogida. El resultado se analizó enfocándose en clientes, proveedores, lotes y tipos de fruta. Inicialmente se buscaban cuáles cumplían y cuales no cumplían la regla de negocio y posteriormente se investigo si había algún elemento de cad variable estudiada (esto es, un cliente en concreto, una fruta determinada o un proveedor X ...) que siempre (o nunca) cumpliera la norma. 
+El planteamiento inicial que se hizo fue la diferencia del tiempo_venta menos el tiempo_recogida. Los tiempos se daban en horas desde el 1 de septiembre del 2024 a las 7:00 de la mañana. Por lo que, una fruta que pase un día en Pontia deberá tener una diferencia mínima de 24 entre tiempo_venta y tiempo_recogida. El resultado se analizó enfocándose en clientes, proveedores, lotes y tipos de fruta. Inicialmente se buscaban cuáles cumplían y cuales no cumplían la regla de negocio y posteriormente se investigo si había algún elemento de cada variable estudiada (esto es, un cliente en concreto, una fruta determinada o un proveedor X ...) que siempre (o nunca) cumpliera la norma. 
 
 Para esto se generó una variable en el bucle en el dataframe llamada diferencia_tiempo_venta, se obtuvo de restar tiempo_recogida y tiempo_venta. A partir de esta variable se filtró el dataframe frente a la variable diferencia_tiempo_venta teniendo en cuenta las variables relevantes para este estudio (lote, proveedor, cliente, tipo de fruta). Esto se hizo contabilizando el total de las variables que pasaban o no pasaban la criba. Dicho total se contabilizaba mediante la creacion de listas como se ven en el cuaderno [añadir ruta cuaderno]. Además con esas listas se generaron sets, los sets permitieron mediante las operaciones de diferencia comprobar si hanía alguna variable de interés que siempre o nunca cumpliera la condición de más de 24 horas de permanencia en Pontia.
 
@@ -149,9 +155,58 @@ Tras aplicar el comando isla al dataframe este no devolvió ningún nulo. Por lo
 
 AUTOMATIZACIÓN DEL PROCESO
 
+LA automatización del proceso de etiquetado requiere el reconocimiento del tipo de fruta que entra en la empresa Pontia Logista. Para ello Pontia Logista proporciona una serie de fotos de todos los lotes de fruta que han entrado en el periodo de un mes, almacenados en carpetas con el nombre de las frutas. Algunas como kiwi, manzana y guasa contienen varias carpetas.
+
+El dataset contiene un total de 70551 imagenes. Durante el análisis exploratorio y al previo al ensayo de entrenamiento no se han detectado imagenes erróneas por cualquier tipo de dato duplicado. Hay que destacar que el dataset tiene una distribución no homogéneanea de las imágenes, las cantidades por tipo de fruta vara desde casi 20.000 hasta 2.700. Esto hubiera sugerido una estrategia de augmentation y generación e imagenes para el dataset. Sin embargo estudios similares han generado modelos de entrenamiento de ML con menos imágenes, por lo que no se modifico el dataset antes de entrenar los modelos, pero se tuvo en cuenta esta distribución de imagenes para el dividir el set de datos entre entrenamiento y test.. [Algo que añadir Sebas?].
+
+El objetivo de este apartado es, poder entrenar modelos de Machine Learnign y Deep LEarnign capaces de clasificar las frutas. Al final del entrenamiento de cada modelo se sacan los parámetros del mismo, y se elegirá el modelo en función del f1-score macro (que es la media del f-1 score de cada tipo de fruta) y la matriz de confusión como dto de apoyo. Hay que tener en cuenta que la matriz de confusión recoge verdaderos positivos/negativos y falsos positivos/negativos por tipo de fruta.
+
+ENTRENAMIENTO ML
+Para el entrenamiento de ML se escogieron los modelos de KNN vecinos, SVM y Randon Forest. El entrenamiento de cada uno de ellos se realizan con las imágenes vectorizadas en un histograma de color, una matiz de formas y un LBP de texturas. Ademas cada imagen se rescató a un tamaño fijo. Todo se logró mediante el paquete cv2.
+
+Se partió de un dataset original que contenía la ruta de las carpetas y que luego, con pandas y métodos storing se obtenía la fruta de el dataset tenía la variable dependiente e independiente del problema). Dicho dataset se partió en dataset de entrenamiento y de test. A continuación se tratan los entrenamientos realizados:
+
+-SVM-
+
+El modelo SVM busca la máxima separación de *features* entre clases, para ello durante el entrenamiento va alterando la linea que separa las diferentes clases hasta encontrar el máximo de separación. 
+
+Para este problema de clasificación de imagenes como ML se han trabajado con 15 frutas distintas utilizando tres parámetros de las imagenes en forma de vector, el color, la forma y la textura. Todas estas características se han obtenido con la librería open_cv [revisar dato anterior].
+
+Para cada imagen se tenía al final un vector formado a partir de los tres vectores con más de 8000 parámetros por imagen. 
+
+El resultado del modelo en términos generales es bueno, tenemos una exactitud del 87% y un f1-score global de 92%. Clasifica muy bien la mayoría de las frutas, eso, a grandes rasgos. Pero si vamos a mirar con más detalle la matriz de confusión vemos que la calidad del modelo no se reparte de forma equitativa. 
+
+Tenemos frutas como el Plum que lo clasifica a la perfección, salvo una imagen que la etiqueta como manzana. Y aqui está el principal problema del modelo, debido a las *features* del dataset de entrenamiento, y a su composición al contener todas las manzanas, el modelo no ha sido capaz de separar bien esta clase del resto. Tenemos entre 126 y 321 imagenes de cada una de las 14 frutas (que no son manzanas) etiquetadas como manzanas. Esto equivale decir que, en los peroes casos, 1 de cada 3 frutas las etiqueta como manzana cuando no es manzana (ni Plum).
+
+La causa principal que se baraja es que las manzanas contiene mucho colores, por lo que este no es un carácter diferenciador para utilizarlo de forma óptima en SVM. Ya que el modelo no podrá separar bien esta característica del resto, que, es el parámetro que tiene el mayor tamaño en el vector que se utiliza para entrenar
+
+Visto esto, el modelo debería volver a entrenarse, o bien, separando cada grupo de manzanas como una clase más o bien entrenando sin la matriz de color. Tambi{en se ha planteado usar un modelo doble, es decir, un modelo entrenado 1 vs all de manzanas frente al resto que si arroja un resultado de "manzana" de ese resultado pero que si da un resutlaod de "otra fruta" salte (como *input*) a un modelo entrenado como el anterior pero sin manzana.
+
+No se ha ejecutado ninguna de estas acciones porque el modelo de DL ya es suficientemente bueno y permite una mejor clasificación.
+
+-KNN-
+
+
+
+-Random Forest-
+
+
+
+DEEP LEARNING
+
+Los modelos de Deep Learning permiten la búsqueda de patrones en las imágenesgenes para generar una predicción utilizando los vectores normalizados de la imagen en RGB. Para este proceso se ha trabajado con redes convulacionales (CNN) y redes pro-entrenadas con imagenes modificando capas [finales] para ajustar la busqueda de patrones. 
+
+-CNN-
+Las redes convulacionaes surgieron com respuesta a la busqueda de patrones en imágenes. Esta red tiene una arquitectura que va reduciendo las variables de estudio durante su capa de encoding (pasando de un shape de datos de 224,224 a unas dimensiones de 28,28,128). Para posteriormente pasar a un vector de 100352 variables.
+
+Los datos pierden dimensiónnalidad al procesarse la matriz en cada neurona con una función e activación ReLU que permite obtener patrones de una imagen independientemente de su posición. Posteriormente, esos datos condensados se aplanan para generar un vactor que pasa a través de la capa de salida con una funcion de activación softmax para obtener un único (y óptimo) resultado dentro de la configuracion de la red neuronal. En este apartado se ha generado un dataset de entrenamiento y test estratificados que se ha compartido con el equipo.
+
+Los resultados frente al modelo de SVM son mejores
 
 
 CONCLUSIONES FINALES Y TRABAJO FUTURO
+
+
 
 
 
