@@ -1,0 +1,15 @@
+langchain
+langchain-community
+langchain-ollama
+langchain-chroma
+chromadb
+pandas
+python-dateutil
+pytest
+
+# Extra opcional para la interfaz de demo (Bloque 8, stretch)
+streamlit
+
+# Notebook de demo interactivo
+jupyter
+ipykernel
