@@ -1,0 +1,113 @@
+.
+├── 1. Modelo Relacional
+│   ├── carga_csv_alchemy.ipynb
+│   ├── creacion_de_modelo_tablas_diagrama.sql
+│   ├── Determinación_variables_mySQL.ipynb
+│   ├── mapa_relacional.png
+│   ├── revision_carga_inicial.sql
+│   └── variables_numericas_mySQL.png
+├── 2. Metricas y KPIs
+│   ├── PJ_Vision_artificial_completo_resultados_resuelto.sql
+│   ├── PJ_Vision_artificial_completo.sql
+│   └── Resultados_parciales
+│       ├── PJ_Alejandro_parte1_y_4.sql
+│       ├── PJ_Javier_parte_3.sql
+│       ├── PJ_Sebastian_parte_2.sql
+│       ├── Resultado_pregunta_1.csv
+│       ├── Resultado_pregunta_10.csv
+│       ├── Resultado_pregunta_11.csv
+│       ├── Resultado_pregunta_12.csv
+│       ├── Resultado_pregunta_13.csv
+│       ├── Resultado_pregunta_14.csv
+│       ├── Resultado_pregunta_2.csv
+│       ├── Resultado_pregunta_3.csv
+│       ├── Resultado_pregunta_4.csv
+│       ├── Resultado_pregunta_5.csv
+│       ├── Resultado_pregunta_6.csv
+│       ├── Resultado_pregunta_7.csv
+│       ├── Resultado_pregunta_8.csv
+│       └── Resultado_pregunta_9.csv
+├── 3.Archivos_ejecutables
+│   ├── 00_Procesamiento_inicial_datos_crudos
+│   │   ├── 00_cuaderonos_sucio
+│   │   ├── creacion_tablas_definitivo.ipynb
+│   │   ├── creacion_tablas_parcial_parte1.ipynb
+│   │   ├── proyecto_júpiter_analisis_exploratorio-2.ipynb
+│   │   ├── Resumen sobre el tratamientos de JSON .docx
+│   │   └── tablas.vision.artificial-2.xlsx
+│   ├── 01_EDA
+│   │   └── tabla_unica-1.ipynb
+│   ├── 02_Deteccion_errores
+│   │   ├── Analisis_errores_tiempo_clientes.jpg
+│   │   ├── Analisis_errores_tiempo_marca.jpg
+│   │   ├── Analisis_errores_tiempo_tipo.jpg
+│   │   ├── cuaderno_sucio
+│   │   └── Detección errores copia.ipynb
+│   ├── 03_Machine_Learning
+│   │   ├── 01_SVM.ipynb
+│   │   ├── 02_ml_knn_dataset_completo.ipynb
+│   │   ├── classification_report_knn_test.csv
+│   │   ├── classification_report_SVM.csv
+│   │   ├── data
+│   │   ├── matriz_confusion_knn_test.csv
+│   │   ├── Matriz_confusion_SVM.jpg
+│   │   ├── models
+│   │   ├── outputs
+│   │   ├── Random_Forest_Alejandro.ipynb
+│   │   ├── README.txt
+│   │   ├── requirements_ml.txt
+│   │   └── venv
+│   ├── 04_Deep_Learning
+│   │   ├── __pycache__
+│   │   ├── 03_dl_resnet50_baseline.ipynb
+│   │   ├── best_model.keras
+│   │   ├── classification_report_CNN.csv
+│   │   ├── classification_report_knn_test.csv
+│   │   ├── classification_report_ResNet.csv
+│   │   ├── CNN_dataset.ipynb
+│   │   ├── config_dl.py
+│   │   ├── data
+│   │   ├── Efficente_Net_Alejandro.ipynb
+│   │   ├── efficientnet_final.h5
+│   │   ├── Matriz_confusion_CNN.jpg
+│   │   ├── matriz_confusion_knn_test.csv
+│   │   ├── Matriz_confusion_ResNet.jpg
+│   │   ├── model_summary_CNN.png
+│   │   ├── models
+│   │   ├── Random_Forest_Alejandro.ipynb
+│   │   ├── README.txt
+│   │   ├── requirements_dl.txt
+│   │   ├── resnet50_summary.csv
+│   │   ├── resnet50_summary.txt
+│   │   ├── test_dataset.csv
+│   │   ├── train_dataset.csv
+│   │   └── venv
+│   └── dataset
+│       ├── df_final_v1
+│       ├── info_lote.json
+│       ├── lotes.json
+│       ├── proveedores-clientes.json
+│       ├── proveedores.json
+│       ├── tipo.json
+│       └── venta_en_cliente.json
+├── 4. Solicion_IA_generativa
+│   └── 02_TFM_IA_generativa
+│       ├── CLAUDE.md
+│       ├── data
+│       ├── notebooks
+│       ├── prompts_datos
+│       ├── README.md
+│       ├── requirements.txt
+│       ├── specs
+│       ├── src
+│       └── tests
+├── 5. Memoria_proyecto
+│   └── 00_otros_documentos_de_interés
+│       ├── EDA
+│       ├── Primera visualización de carpetas de frutas.docx
+│       └── tablas.vision.artificial-2.xlsx
+├── 6. Dashboard
+│   └── Dashboard_PJ_Pontia_Logista.pbix
+└── project_tree
+
+33 directories, 78 files

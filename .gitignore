@@ -53,7 +53,7 @@ checkpoint
 # Datos originales
 # ======================================
 
-data/raw/archive/
+**/data/raw/archive/
 
 # ======================================
 # Resultados temporales
